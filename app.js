@@ -17,10 +17,10 @@ app.use(express.json());
 
 //MIDDLEWARE
 app.use(require('./middleware/headers'));
+app.use('/api/user', User);
 app.use(require('./middleware/validate-session'));
 
 //USED ROUTES
-app.use('/api/user', User);
 app.use('/api/rider', Rider);
 app.use('/api/rating', Rating);
 
