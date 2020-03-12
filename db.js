@@ -12,6 +12,7 @@ User = sequelize.import('./models/user');
 Rider = sequelize.import('./models/rider');
 Ratings = sequelize.import('./models/rating')
 
+// sequelize.sync();
 module.exports = sequelize;
 
 

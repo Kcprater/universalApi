@@ -1,4 +1,4 @@
-let express = require("express"); //UPDATED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+let express = require("express");
 let router = express.Router();
 let sequelize = require('../db');
 let User = sequelize.import('../models/user');
@@ -9,12 +9,9 @@ let jwt = require('jsonwebtoken');
 //Create New Account
 router.post('/', function (req, res) { 
 
-  // let email = req.body.user.email;
-  let pass = req.body.user.password;//passwordhash???????
-
   User.create({
     email: req.body.user.email,
-    passwordhash: bcrypt.hashSync(pass, 10),
+    passwordhash: bcrypt.hashSync(req.body.user.passwordhash, 10),
 
   }).then(
     function createSuccess(user) {
@@ -34,7 +31,7 @@ router.post('/', function (req, res) {
 })
 
 //Login to account
-router.post('/', function(req, res) {
+router.post('/login', function(req, res) {
   
   User.findOne({where: {email: req.body.user.email}}
     ).then(function(user) {

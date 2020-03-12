@@ -8,7 +8,7 @@ const app = express();
 let User = require('./controllers/usercontroller');
 let Rating = require('./controllers/ratingcontroller');
 // const list = require('./controllers/listcontroller');
-const Rider = require('./controllers/riderratingcontroller');
+// const Rider = require('./controllers/riderratingcontroller'); //commented out - may not need
 
 //DB IMPORT & SYNC
 const sequelize = require('./db');

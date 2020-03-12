@@ -1,33 +1,25 @@
-let router = require('express').Router(); //UPDATED!!!
+let router = require('express').Router();
 let sequelize = require('../db.js');
-let User = sequelize.import('../models/user'); //user.js??
-let Rating = sequelize.import('../models/rating');//rating.js???
+let User = sequelize.import('../models/user');
+let Rating = sequelize.import('../models/rating');
 
-// router.get('/', (req, res) => {
-//   Rating.findAll()
-//     .then(rating => res.status(200).json(rating)) //maybe delete????????????????
-//     .catch(err => res.status(500).json ({
-//       error: err
-//     }))
-// })
+router.post ('/', function(req,res){
 
-router.post ('/', (req,res) => {
-
-  // console.log(req.body)abc
-  let user = req.user;
+  // console.log(req.body)
   let nameOfRide = req.body.rating.nameOfRide;
   let date = req.body.rating.date;
   let waitTime = req.body.rating.waitTime;
   let rideRating = req.body.rating.rideRating;
   let comments = req.body.rating.comments;
+  let user = req.user;
 
   Rating.create({
-    rider: user.id,
     nameOfRide: nameOfRide,
     date: date,
     waitTime: waitTime,
     rideRating: rideRating,
     comments: comments,
+    owner: user.id,
 
   }).then(
     function createSuccess(rating) {
@@ -42,18 +34,24 @@ router.post ('/', (req,res) => {
   );
 })
 
-router.get('/', (req, res) => {
+router.get('/', function(req, res){
   let userid = req.user.id;
-  Rating.findAll({ where: { rider: userid}})
-    .then(rating => res.status(200).json(rating))
-    .catch(err => res.status(500).json({ error: err}))
+  Rating.findAll({ where: {owner: userid}})
+    .then(			
+      function findAllSuccess(data){
+      res.json(data)
+    },
+    function findAllError(err){
+      res.send(500, err.message)
+    }
+  )
 })
 
 router.delete('/:id', function(req, res){
-	let ratingID = req.params.id;
+	let dataID = req.params.id;
 
-	Rating.destroy({ where: {id: ratingID }}).then(
-		function deleteRatingSuccess(rating){
+	Rating.destroy({ where: {id: dataID }}).then(
+		function deleteRatingSuccess(data){
 			res.send("You removed a Rating!");
 		},
 		function deleteRatingError(err){
@@ -63,8 +61,8 @@ router.delete('/:id', function(req, res){
 })
 
 router.get('/:id', function(req, res){
-	let ratingID = req.params.id;
-	Rating.findOne({ where: {id: ratingID }}).then(
+	let dataID = req.params.id;
+	Rating.findOne({ where: {id: dataID }}).then(
 		function getSuccess(data){
 			res.json(data)
 		},
@@ -76,21 +74,20 @@ router.get('/:id', function(req, res){
 })
 
 router.put('/:id', function(req,res){
-	// let rider = req.params.id;
 	let nameOfRide = req.body.rating.nameOfRide;
-	let date = req.body.rating.date; 
-  let rider = req.params.id // might need
+  let date = req.body.rating.date; 
+  let waitTime = req.body.rating.waitTime;
   let rideRating = req.body.rating.rideRating; 
   let comments = req.body.rating.comments; 
+  let data = req.params.id
 
   Rating.update({
-    // rider: user.id,
     nameOfRide: nameOfRide,
     date: date,
     waitTime: waitTime,
     rideRating: rideRating,
     comments: comments,
-	}, {where: {id : rider}}).then(
+	}, {where: {id : data}}).then(
 		function updateSuccess(updateData){
 			res.json(updateData)
 		},
@@ -100,99 +97,3 @@ router.put('/:id', function(req,res){
 	)
 })
 module.exports = router;
-
-//second attempt
-
-// router.post(`/`, function (req, res) {
-//   let user = req.user.id;
-//   let nameOfRide = req.body.rating.nameOfRide;
-//   let date = req.body.rating.date;
-//   let waitTime = req.body.rating.waitTime;
-//   let rideRating = req.body.rating.rideRating;
-//   let comments = req.body.rating.comments;
-
-//   console.log(user.id)
-
-//   Rating.create({
-//       user: user,
-//       nameOfRide: nameOfRide,
-//       date: date,
-//       waitTime: waitTime,
-//       rideRating: rideRating,
-//       comments: comments
-//   })
-//       .then(
-//           function createRatingSuccess(rating) {
-//               res.status(200).json({
-//                   rating: rating,
-//                   message: "Successfully created rating!"
-//               })
-//           },
-//           function createRatingError(err) {
-//               res.json(500, err.message)
-//           }
-//       )
-// })
-
-// router.delete("/:id", function (req, res) {
-//   let ratingID = req.params.id;
-
-//   Rating.findById(ratingID)
-//       .then(
-//           function (item) {
-//               if (item == undefined) {
-//                   res.send(500, "ID doesn't match")
-//               } else {
-//                   Rating.destroy({ where: { id: ratingID } })
-//                       .then(
-//                           function createDeleteSuccess() {
-//                               res.status(200).send("Removed Ride Rating")
-//                           },
-//                           function createDeleteError(err) {
-//                               res.send(500, err.message)
-//                           }
-//                       )
-//               }
-//           })
-// })
-
-// router.get("/get", function (req, res) {
-//   let userID = req.user.id
-
-//   Rating.findAll({ where: { owner: userID } })
-//       .then(
-//           function createFindAllSuccess(data) {
-//               res.status(200).json(data)
-//           },
-//           function createFindAllError(err) {
-//               res.send(500, err.message)
-//           }
-//       )
-// })
-
-// router.put("/update/:id", function (req, res) {
-//   let ratingID = req.params.id
-//   let nameOfRide = req.body.rating.nameOfRide;
-//   let date = req.body.rating.date;
-//   let waitTime = req.body.rating.waitTime;
-//   let rideRating = req.body.rating.rideRating;
-//   let comments = req.body.rating.comments
-
-//   Rating.update({
-//       nameOfRide: nameOfRide,
-//       date: date,
-//       waitTime: waitTime,
-//       rideRating: rideRating,
-//       comments: comments
-//   }, { where: { id: ratingID } } )
-//       .then(
-//           function createUpdateSuccess(updatedData) {
-//               res.status(200).json(updatedData)
-//           },
-//           function createUpdateError(err) {
-//               res.send(500, err.message)
-//           }
-//       )
-// })
-
-// module.exports = router;

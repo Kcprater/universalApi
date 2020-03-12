@@ -1,4 +1,4 @@
-const router = require('express').Router();
+const router = require('express').Router(); //not being used???
 const List = require('../db').import('../models/ridelist');
 const validateSession = require('../middleware/validate-session');
 
