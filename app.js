@@ -21,7 +21,7 @@ app.use('/api/user', User);
 app.use(require('./middleware/validate-session'));
 
 //USED ROUTES
-app.use('/api/rider', Rider);
+// app.use('/api/rider', Rider);
 app.use('/api/rating', Rating);
 
 //NOT USED ROUTES
