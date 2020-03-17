@@ -8,9 +8,11 @@ sequelize.authenticate()
   .then(() => console.log("The Database Is Connected!"))
   .catch(err => console.log(err));
 
-User = sequelize.import('./models/user');
-Rider = sequelize.import('./models/rider');
-Ratings = sequelize.import('./models/rating')
+// User = sequelize.import('./models/user');
+// Rider = sequelize.import('./models/rider');
+// Ratings = sequelize.import('./models/rating')
+
+
 
 // sequelize.sync();
 module.exports = sequelize;

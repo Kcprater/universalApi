@@ -1,6 +1,6 @@
 let router = require('express').Router();
 let sequelize = require('../db.js');
-let User = sequelize.import('../models/user');
+// let User = sequelize.import('../models/user');
 let Rating = sequelize.import('../models/rating');
 
 router.post ('/', function(req,res){
